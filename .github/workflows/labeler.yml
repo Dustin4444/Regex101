@@ -1,0 +1,52 @@
+name: "Labeler"
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign labels based on issue template
+        if: github.event.issue.body != ''
+        run: |
+          ISSUE_TEMPLATE=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=name: ).*')
+          case "$ISSUE_TEMPLATE" in
+            "Bug Report")
+              LABEL="bug"
+              ;;
+            "Code Generator")
+              LABEL="code generator"
+              ;;
+            "Documentation Issue")
+              LABEL="documentation"
+              ;;
+            "Feature")
+              LABEL="enhancement"
+              ;;
+            "Flavor Request")
+              LABEL="flavor request"
+              ;;
+            "Performance Issue")
+              LABEL="performance"
+              ;;
+            "Question")
+              LABEL="question"
+              ;;
+            "Quiz")
+              LABEL="quiz"
+              ;;
+            "UI/UX Issue")
+              LABEL="UI/UX"
+              ;;
+            *)
+              LABEL=""
+              ;;
+          esac
+          if [ -n "$LABEL" ]; then
+            curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
+              -d "{\"labels\":[\"$LABEL\"]}"
+          fi

@@ -1,0 +1,42 @@
+name: Request More Info
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  request-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request more info
+        if: github.event.issue.body == ''
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const issueOwner = context.issue.user.login;
+            const issueTitle = context.issue.title;
+            const issueUrl = context.issue.html_url;
+
+            const commentBody = `
+              Hi @${issueOwner},
+
+              It looks like you didn't provide enough information in your issue report. Could you please provide more details so that we can better understand and resolve the issue?
+
+              **Issue Title:** ${issueTitle}
+              **Issue URL:** ${issueUrl}
+
+              Please include the following information:
+              - Description of the issue
+              - Steps to reproduce
+              - Expected outcome
+              - Any relevant logs, screenshots, or other supporting information
+
+              Thank you!
+            `;
+
+            await github.issues.createComment({
+              ...context.repo,
+              issue_number: issueNumber,
+              body: commentBody,
+            });

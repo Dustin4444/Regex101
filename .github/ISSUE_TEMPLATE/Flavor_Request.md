@@ -16,3 +16,6 @@ When requesting a new flavor, please link to any relevant documentation pages if
 -->
 
 ## Flavor Request
+
+### Additional Context
+Include any relevant logs, screenshots, or other supporting information
