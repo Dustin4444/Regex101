@@ -19,3 +19,6 @@ https://github.com/firasdib/Regex101/wiki/Writing-a-Code-Generator
 ```js
 // Generator code.
 ```
+
+### Additional Context
+Include any relevant logs, screenshots, or other supporting information
